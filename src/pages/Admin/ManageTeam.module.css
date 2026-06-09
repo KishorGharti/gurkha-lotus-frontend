@@ -1,0 +1,425 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1000px;
+  position: relative;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  background: var(--color-elevated);
+  border: 1px solid rgba(201, 160, 68, 0.4);
+  border-radius: 6px;
+  color: var(--color-accent);
+  font-size: 0.85rem;
+  padding: 12px 20px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+  animation: slideIn 0.25s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Header ── */
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pageTitle {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
+}
+
+.pageDesc {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.addBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 22px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+
+.addBtn:hover {
+  background: var(--color-accent-light);
+}
+
+/* ── Grid ── */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+/* ── Card ── */
+.card {
+  background: var(--color-surface);
+  border: 1px solid rgba(201, 160, 68, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.25s ease;
+}
+
+.card:hover {
+  border-color: rgba(201, 160, 68, 0.25);
+}
+
+.avatarWrap {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  background: var(--color-avatar-bg);
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.initials {
+  font-family: 'Oswald', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: rgba(201, 160, 68, 0.7);
+  letter-spacing: 3px;
+  user-select: none;
+}
+
+.info {
+  padding: 16px 16px 12px;
+  flex: 1;
+}
+
+.memberName {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.memberRole {
+  font-size: 0.7rem;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+
+.memberBio {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.cardActions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(201, 160, 68, 0.08);
+}
+
+.editBtn {
+  flex: 1;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px solid rgba(201, 160, 68, 0.28);
+  border-radius: 4px;
+  padding: 8px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+}
+
+.editBtn:hover {
+  background: rgba(201, 160, 68, 0.08);
+}
+
+.deleteBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-error);
+  background: transparent;
+  border: 1px solid rgba(220, 60, 60, 0.28);
+  border-radius: 4px;
+  padding: 8px 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+}
+
+.deleteBtn:hover {
+  background: rgba(220, 60, 60, 0.08);
+}
+
+/* Empty state */
+.emptyState {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 60px 20px;
+  background: var(--color-surface);
+  border: 1px dashed rgba(201, 160, 68, 0.15);
+  border-radius: 8px;
+  color: var(--color-text-dim);
+  font-size: 1rem;
+  text-align: center;
+}
+
+.emptyState span {
+  font-size: 2rem;
+}
+
+/* ── Modal form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Photo upload */
+.photoSection {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.photoPreview {
+  width: 88px;
+  height: 88px;
+  border-radius: 6px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-avatar-bg);
+}
+
+.photoPreviewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photoInitials {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: rgba(201, 160, 68, 0.7);
+  letter-spacing: 2px;
+}
+
+.photoActions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hiddenInput {
+  display: none;
+}
+
+.uploadPhotoBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+}
+
+.uploadPhotoBtn:hover {
+  background: var(--color-accent-light);
+}
+
+.removePhotoBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  color: var(--color-error);
+  background: transparent;
+  border: 1px solid rgba(220, 60, 60, 0.28);
+  border-radius: 4px;
+  padding: 6px 14px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+}
+
+.removePhotoBtn:hover {
+  background: rgba(220, 60, 60, 0.08);
+}
+
+.photoHint {
+  font-size: 0.7rem;
+  color: var(--color-text-dim);
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.formLabel {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-label);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.req {
+  color: var(--color-accent);
+}
+
+.formInput,
+.formTextarea {
+  background: var(--color-input-bg);
+  border: 1px solid rgba(201, 160, 68, 0.18);
+  border-radius: 4px;
+  color: var(--color-text);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.88rem;
+  padding: 10px 14px;
+  width: 100%;
+  transition: border-color 0.25s ease;
+  resize: vertical;
+}
+
+.formInput::placeholder,
+.formTextarea::placeholder {
+  color: var(--color-placeholder);
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: rgba(201, 160, 68, 0.45);
+}
+
+/* Field-level validation */
+.formInputErr {
+  border-color: rgba(224, 96, 96, 0.6);
+}
+
+.fieldError {
+  font-size: 0.72rem;
+  color: var(--color-error);
+}
+
+/* Form actions */
+.formActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+.cancelFormBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-soft);
+  background: var(--color-input-bg);
+  border: 1px solid rgba(201, 160, 68, 0.15);
+  border-radius: 4px;
+  padding: 10px 24px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+}
+
+.cancelFormBtn:hover {
+  background: var(--color-hover-bg);
+}
+
+.submitFormBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 28px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: background 0.2s ease;
+}
+
+.submitFormBtn:hover {
+  background: var(--color-accent-light);
+}
+
+/* ── Responsive ── */
+@media (max-width: 760px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

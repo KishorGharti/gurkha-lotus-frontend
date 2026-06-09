@@ -1,0 +1,421 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 1100px;
+  position: relative;
+}
+
+/* ── Toast ── */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 9999;
+  background: var(--color-elevated);
+  border: 1px solid rgba(201, 160, 68, 0.4);
+  border-radius: 6px;
+  color: var(--color-accent);
+  font-size: 0.85rem;
+  padding: 12px 20px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+  animation: slideIn 0.25s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Page header ── */
+.pageHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.pageTitle {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 4px;
+}
+
+.pageDesc {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.addBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 22px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+
+.addBtn:hover {
+  background: var(--color-accent-light);
+}
+
+/* ── Table ── */
+.tableWrap {
+  background: var(--color-surface);
+  border: 1px solid rgba(201, 160, 68, 0.1);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 14px 16px;
+  text-align: left;
+  background: var(--color-surface-alt);
+  border-bottom: 1px solid rgba(201, 160, 68, 0.1);
+  white-space: nowrap;
+}
+
+.tr {
+  border-bottom: 1px solid rgba(201, 160, 68, 0.06);
+  transition: background 0.18s ease;
+}
+
+.tr:last-child {
+  border-bottom: none;
+}
+
+.tr:hover {
+  background: rgba(201, 160, 68, 0.04);
+}
+
+.td {
+  padding: 14px 16px;
+  vertical-align: middle;
+}
+
+.iconCell {
+  font-size: 1.4rem;
+}
+
+.titleCell {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-text);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.descCell {
+  font-size: 0.78rem;
+  color: var(--color-text-faint);
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  max-width: 280px;
+}
+
+.featurePills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.pill {
+  font-size: 0.68rem;
+  background: rgba(201, 160, 68, 0.1);
+  border: 1px solid rgba(201, 160, 68, 0.2);
+  color: var(--color-accent);
+  border-radius: 3px;
+  padding: 3px 8px;
+  white-space: nowrap;
+}
+
+.pillMore {
+  font-size: 0.68rem;
+  color: var(--color-text-muted);
+  padding: 3px 6px;
+}
+
+.rowActions {
+  display: flex;
+  gap: 6px;
+}
+
+.editBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px solid rgba(201, 160, 68, 0.3);
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+
+.editBtn:hover {
+  background: rgba(201, 160, 68, 0.1);
+}
+
+.deleteBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-error);
+  background: transparent;
+  border: 1px solid rgba(220, 60, 60, 0.3);
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+  white-space: nowrap;
+}
+
+.deleteBtn:hover {
+  background: rgba(220, 60, 60, 0.1);
+}
+
+.emptyRow {
+  text-align: center;
+  padding: 40px;
+  color: var(--color-text-dim);
+  font-size: 0.86rem;
+}
+
+/* ── Modal form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.formLabel {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-label);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.req {
+  color: var(--color-accent);
+}
+
+.formInputErr {
+  border-color: rgba(224, 96, 96, 0.6);
+}
+
+.fieldError {
+  font-size: 0.72rem;
+  color: var(--color-error);
+}
+
+.formHint {
+  font-size: 0.72rem;
+  color: var(--color-text-dim);
+  align-self: flex-end;
+}
+
+.formInput,
+.formTextarea {
+  background: var(--color-input-bg);
+  border: 1px solid rgba(201, 160, 68, 0.18);
+  border-radius: 4px;
+  color: var(--color-text);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.88rem;
+  padding: 10px 14px;
+  width: 100%;
+  transition: border-color 0.25s ease;
+  resize: vertical;
+}
+
+.formInput::placeholder,
+.formTextarea::placeholder {
+  color: var(--color-placeholder);
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  outline: none;
+  border-color: rgba(201, 160, 68, 0.45);
+}
+
+/* Icon picker */
+.iconPicker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.iconOption {
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  background: var(--color-input-bg);
+  border: 1px solid rgba(201, 160, 68, 0.15);
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.iconOption:hover {
+  background: rgba(201, 160, 68, 0.1);
+}
+
+.iconOptionActive {
+  border-color: var(--color-accent) !important;
+  background: rgba(201, 160, 68, 0.15) !important;
+}
+
+/* Features */
+.featuresList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.featureRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.featureRow .formInput {
+  flex: 1;
+}
+
+.removeFeatureBtn {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: 1px solid rgba(220, 60, 60, 0.25);
+  border-radius: 4px;
+  color: var(--color-error);
+  cursor: pointer;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.removeFeatureBtn:hover:not(:disabled) {
+  background: rgba(220, 60, 60, 0.1);
+}
+
+.removeFeatureBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.addFeatureBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  background: transparent;
+  border: 1px dashed rgba(201, 160, 68, 0.3);
+  border-radius: 4px;
+  padding: 8px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+  align-self: flex-start;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
+.addFeatureBtn:hover {
+  background: rgba(201, 160, 68, 0.06);
+}
+
+/* Form actions */
+.formActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 4px;
+}
+
+.cancelFormBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-soft);
+  background: var(--color-input-bg);
+  border: 1px solid rgba(201, 160, 68, 0.15);
+  border-radius: 4px;
+  padding: 10px 24px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+}
+
+.cancelFormBtn:hover {
+  background: var(--color-hover-bg);
+}
+
+.submitFormBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 28px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  transition: background 0.2s ease;
+}
+
+.submitFormBtn:hover {
+  background: var(--color-accent-light);
+}

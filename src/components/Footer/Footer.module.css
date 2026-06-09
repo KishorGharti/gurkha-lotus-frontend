@@ -1,0 +1,241 @@
+.footer {
+  background: var(--color-bg);
+  border-top: 1px solid rgba(201, 160, 68, 0.2);
+}
+
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Row: info + map side by side ── */
+.row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 100px;
+  flex-wrap: wrap;
+  min-height: 500px;
+
+}
+
+/* ── Top grid ── */
+.top {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  padding: 72px 0 52px;
+  flex: 1 1 480px;
+}
+
+/* ── Brand ── */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.logoSvg {
+  width: 46px;
+  height: 46px;
+  flex-shrink: 0;
+}
+
+.logoName {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: 2.5px;
+}
+
+.logoTagline {
+  font-size: 0.68rem;
+  color: var(--color-accent);
+  letter-spacing: 3.5px;
+  text-transform: uppercase;
+  margin-top: 3px;
+}
+
+.brandText {
+  font-size: 0.86rem;
+  color: var(--color-text-muted);
+  line-height: 1.75;
+  max-width: 500px;
+}
+
+/* ── Column titles ── */
+.colTitle {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: 22px;
+}
+
+/* ── Contact list ── */
+.contactList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.contactList li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+}
+
+.contactList li span:first-child {
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* ── Contact form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.input,
+.textarea {
+  background: var(--color-surface);
+  border: 1px solid rgba(201, 160, 68, 0.15);
+  border-radius: var(--radius);
+  color: var(--color-text);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.82rem;
+  padding: 10px 14px;
+  width: 100%;
+  transition: border-color 0.25s ease;
+  resize: none;
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-text-dim);
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: rgba(201, 160, 68, 0.45);
+}
+
+.inputError {
+  border-color: rgba(220, 80, 80, 0.5) !important;
+}
+
+.errMsg {
+  font-size: 0.72rem;
+  color: var(--color-error);
+  letter-spacing: 0.3px;
+}
+
+.submitBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 12px 24px;
+  border-radius: var(--radius);
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 2px;
+  transition: background 0.25s ease, transform 0.2s ease;
+}
+
+.submitBtn:hover {
+  background: var(--color-accent-light);
+  transform: translateY(-1px);
+}
+
+.success {
+  background: rgba(201, 160, 68, 0.1);
+  border: 1px solid rgba(201, 160, 68, 0.3);
+  border-radius: var(--radius);
+  padding: 18px 16px;
+  color: var(--color-accent);
+  font-size: 0.86rem;
+  text-align: center;
+  line-height: 1.6;
+}
+
+/* ── Map ── */
+.mapSection {
+  flex: 1 1 480px;
+  padding: 72px 0 12px;
+}
+
+.mapWrap {
+  width: 100%;
+  max-width: none;
+  border-radius: var(--radius);
+  border: 2px, white;
+  overflow: hidden;
+  border: 1px solid rgba(201, 160, 68, 0.15);
+}
+
+.mapWrap iframe {
+  display: block;
+  width: 100%;
+  height: 280px;
+  border: 0;
+}
+
+/* ── Bottom bar ── */
+.bottom {
+  border-top: 1px solid rgba(201, 160, 68, 0.1);
+  padding: 22px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.copy {
+  font-size: 0.76rem;
+  color: var(--color-text-dim);
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+  .top {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 600px) {
+  .top {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 52px 0 36px;
+  }
+
+  .bottom {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+  }
+}

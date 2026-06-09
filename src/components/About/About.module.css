@@ -1,0 +1,226 @@
+.about {
+  background: var(--color-surface);
+  padding: 100px 0 0;
+}
+
+.container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ── Two-column layout ── */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+  margin-bottom: 80px;
+}
+
+/* ── Image column ── */
+.imageCol {
+  position: relative;
+}
+
+.imgWrap {
+  width: 100%;
+  aspect-ratio: 5 / 5;
+  border-radius: var(--radius);
+  overflow: hidden;
+  position: relative;
+  
+}
+
+.imgWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.imgPlaceholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, var(--color-elevated) 0%, #2c5a2c 55%, #162a16 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-align: center;
+  padding: 20px;
+}
+
+.imgPlaceholder small {
+  font-size: 0.65rem;
+  color: rgba(201, 160, 68, 0.5);
+  letter-spacing: 1px;
+}
+
+.decor {
+  position: absolute;
+  bottom: -22px;
+  right: -22px;
+  width: 55%;
+  height: 55%;
+  border: 2px solid rgba(201, 160, 68, 0.25);
+  border-radius: var(--radius);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ── Text column ── */
+.textCol {
+  padding: 16px 0;
+}
+
+.overline {
+  display: block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.78rem;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin-bottom: 16px;
+}
+
+.title {
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 700;
+  color: var(--color-text);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1.2;
+  margin-bottom: 28px;
+}
+
+.accent {
+  color: var(--color-accent);
+}
+
+.body {
+  color: var(--color-text-soft);
+  line-height: 1.82;
+  margin-bottom: 18px;
+  font-size: 0.93rem;
+}
+
+/* ── Highlights list ── */
+.highlights {
+  list-style: none;
+  padding: 0;
+  margin: 28px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.highlightItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-text-soft);
+  font-size: 0.88rem;
+}
+
+.bullet {
+  color: var(--color-accent);
+  font-size: 0.68rem;
+  flex-shrink: 0;
+}
+
+.btn {
+  display: inline-block;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 14px 38px;
+  border-radius: var(--radius);
+  transition: background 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease;
+  margin-top: 8px;
+}
+
+.btn:hover {
+  background: var(--color-accent-light);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 26px rgba(201, 160, 68, 0.32);
+}
+
+/* ── Stats bar ── */
+.statsBar {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: linear-gradient(135deg, var(--color-on-accent) 0%, var(--color-elevated) 100%);
+  border-top: 1px solid rgba(201, 160, 68, 0.18);
+}
+
+.stat {
+  padding: 44px 20px;
+  text-align: center;
+  border-right: 1px solid rgba(201, 160, 68, 0.1);
+}
+
+.stat:last-child {
+  border-right: none;
+}
+
+.statValue {
+  display: block;
+  font-family: 'Oswald', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 700;
+  color: var(--color-accent);
+  line-height: 1;
+  margin-bottom: 10px;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: var(--color-text-faint);
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 44px;
+  }
+
+  .imageCol {
+    max-width: 420px;
+  }
+
+  .statsBar {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .stat:nth-child(2) {
+    border-right: none;
+  }
+
+  .stat:nth-child(3) {
+    border-right: 1px solid rgba(201, 160, 68, 0.1);
+    border-top: 1px solid rgba(201, 160, 68, 0.1);
+  }
+
+  .stat:nth-child(4) {
+    border-top: 1px solid rgba(201, 160, 68, 0.1);
+  }
+}
+
+@media (max-width: 480px) {
+  .statsBar {
+    grid-template-columns: 1fr 1fr;
+  }
+}

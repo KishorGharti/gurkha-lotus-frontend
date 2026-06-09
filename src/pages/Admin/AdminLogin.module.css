@@ -1,0 +1,218 @@
+.page {
+  min-height: 100vh;
+  background: var(--color-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(201, 160, 68, 0.02) 0px,
+    rgba(201, 160, 68, 0.02) 1px,
+    transparent 1px,
+    transparent 12px
+  );
+}
+
+.card {
+  background: var(--color-surface);
+  border: 1px solid rgba(201, 160, 68, 0.2);
+  border-radius: 10px;
+  width: 100%;
+  max-width: 420px;
+  padding: 44px 40px 36px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+/* ── Logo ── */
+.logoWrap {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.svg {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 14px;
+}
+
+.brand {
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--color-text);
+  letter-spacing: 4px;
+  margin-bottom: 4px;
+}
+
+.panelLabel {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.75rem;
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 4px;
+}
+
+/* ── Form ── */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+
+.errorBanner {
+  background: rgba(180, 40, 40, 0.15);
+  border: 1px solid rgba(180, 40, 40, 0.4);
+  border-radius: 4px;
+  color: var(--color-error);
+  font-size: 0.82rem;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--color-text-soft);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.input {
+  background: var(--color-input-bg);
+  border: 1px solid rgba(201, 160, 68, 0.18);
+  border-radius: 4px;
+  color: var(--color-text);
+  font-family: 'Open Sans', sans-serif;
+  font-size: 0.9rem;
+  padding: 12px 14px;
+  width: 100%;
+  transition: border-color 0.25s ease;
+}
+
+.input::placeholder { color: var(--color-placeholder); }
+
+.input:focus {
+  outline: none;
+  border-color: rgba(201, 160, 68, 0.5);
+}
+
+.inputErr {
+  border-color: rgba(180, 50, 50, 0.5) !important;
+}
+
+.passWrap {
+  position: relative;
+}
+
+.passInput {
+  padding-right: 46px;
+}
+
+.showPassBtn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 2px;
+  color: var(--color-text-faint);
+}
+
+.submitBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border: none;
+  border-radius: 4px;
+  padding: 14px;
+  width: 100%;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: background 0.25s ease, transform 0.2s ease;
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: var(--color-accent-light);
+  transform: translateY(-1px);
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(10, 26, 10, 0.3);
+  border-top-color: var(--color-on-accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Hint ── */
+.hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px;
+  background: rgba(201, 160, 68, 0.06);
+  border: 1px dashed rgba(201, 160, 68, 0.2);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.hintLabel {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.hintCode {
+  font-size: 0.82rem;
+  color: var(--color-accent);
+  font-family: monospace;
+  letter-spacing: 0.5px;
+}
+
+.backLink {
+  display: block;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  transition: color 0.2s ease;
+}
+
+.backLink:hover {
+  color: var(--color-accent);
+}
