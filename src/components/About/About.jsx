@@ -1,5 +1,6 @@
+import { useState } from 'react'
 import { usePhotos } from '../../context/PhotosContext'
-import { optimizedImageUrl } from '../../utils/cloudinaryUrl'
+import { optimizedImageUrl, placeholderImageUrl } from '../../utils/cloudinaryUrl'
 import styles from './About.module.css'
 
 const STATS = [
@@ -20,6 +21,7 @@ const HIGHLIGHTS = [
 export default function About() {
   const { photos } = usePhotos()
   const aboutPhoto = photos.about
+  const [imgLoaded, setImgLoaded] = useState(false)
 
   const scrollTo = (e, href) => {
     e.preventDefault()
@@ -31,10 +33,19 @@ export default function About() {
       <div className={styles.container}>
         <div className={styles.grid}>
           <div className={styles.imageCol}>
-            <div className={styles.imgWrap}>
+            <div
+              className={styles.imgWrap}
+              style={aboutPhoto ? {
+                backgroundImage: `url(${placeholderImageUrl(aboutPhoto.url)})`,
+                backgroundSize: 'cover',
+                backgroundPosition: `${aboutPhoto.cropX ?? 50}% ${aboutPhoto.cropY ?? 50}%`,
+              } : undefined}
+            >
               {aboutPhoto ? (
                 <img
                   src={optimizedImageUrl(aboutPhoto.url, { width: 900 })} alt="Gurkha Lotus Boot Camp training ground"
+                  className={`${styles.aboutImg} ${imgLoaded ? styles.aboutImgLoaded : ''}`}
+                  onLoad={() => setImgLoaded(true)}
                   style={{
                     objectPosition: `${aboutPhoto.cropX ?? 50}% ${aboutPhoto.cropY ?? 50}%`,
                     transform: `scale(${aboutPhoto.zoom ?? 1})`,

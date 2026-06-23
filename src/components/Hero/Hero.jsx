@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { usePhotos } from '../../context/PhotosContext'
-import { optimizedImageUrl } from '../../utils/cloudinaryUrl'
+import { optimizedImageUrl, placeholderImageUrl } from '../../utils/cloudinaryUrl'
 import styles from './Hero.module.css'
 
 const SLIDES = [
@@ -55,7 +55,12 @@ export default function Hero() {
 
   const slides = SLIDES.map(s => {
     const photo = photos[s.slotId]
-    return { ...s, image: optimizedImageUrl(photo?.url, { width: 1920 }), cropX: photo?.cropX, cropY: photo?.cropY, zoom: photo?.zoom }
+    return {
+      ...s,
+      image: optimizedImageUrl(photo?.url, { width: 1920 }),
+      placeholder: placeholderImageUrl(photo?.url),
+      cropX: photo?.cropX, cropY: photo?.cropY, zoom: photo?.zoom,
+    }
   })
 
   useEffect(() => {
@@ -84,7 +89,12 @@ export default function Hero() {
         <div
           key={s.id}
           className={`${styles.slide} ${i === current ? styles.slideActive : ''}`}
-          style={{ backgroundColor: s.fallbackBg }}
+          style={{
+            backgroundColor: s.fallbackBg,
+            backgroundImage: s.placeholder ? `url(${s.placeholder})` : undefined,
+            backgroundSize: 'cover',
+            backgroundPosition: `${s.cropX ?? 50}% ${s.cropY ?? 50}%`,
+          }}
           aria-hidden={i !== current}
         >
           {s.image && (i === current || otherSlidesUnlocked) && (
