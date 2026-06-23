@@ -16,9 +16,7 @@ function readCache() {
 function writeCache(data) {
   try {
     sessionStorage.setItem(CACHE_KEY, JSON.stringify(data))
-  } catch {
-    // ignore (private browsing / storage disabled)
-  }
+  } catch {}
 }
 
 export function PhotosProvider({ children }) {
@@ -26,8 +24,6 @@ export function PhotosProvider({ children }) {
   const [photos, setPhotos] = useState(cached || {})
   const [loaded, setLoaded] = useState(!!cached)
 
-  // Serve the cached snapshot instantly on refresh so images can start
-  // downloading right away, then revalidate against the server.
   const refresh = useCallback((retriesLeft = 2) => {
     return api.get('/photos')
       .then(d => { setPhotos(d.data); setLoaded(true); writeCache(d.data) })

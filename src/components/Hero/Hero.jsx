@@ -58,7 +58,6 @@ export default function Hero() {
     return { ...s, image: optimizedImageUrl(photo?.url, { width: 1920 }), cropX: photo?.cropX, cropY: photo?.cropY, zoom: photo?.zoom }
   })
 
-  // Let the visible slide's image claim full bandwidth before the rest start downloading.
   useEffect(() => {
     const t = setTimeout(() => setOtherSlidesUnlocked(true), 800)
     return () => clearTimeout(t)
