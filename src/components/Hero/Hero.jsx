@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { usePhotos } from '../../context/PhotosContext'
-import { optimizedImageUrl, placeholderImageUrl } from '../../utils/cloudinaryUrl'
+import { optimizedImageUrl, placeholderImageUrl, zoomedWidth } from '../../utils/cloudinaryUrl'
 import styles from './Hero.module.css'
 
 const SLIDES = [
@@ -57,7 +57,7 @@ export default function Hero() {
     const photo = photos[s.slotId]
     return {
       ...s,
-      image: optimizedImageUrl(photo?.url, { width: 1920 }),
+      image: optimizedImageUrl(photo?.url, { width: zoomedWidth(1920, photo?.zoom) }),
       placeholder: placeholderImageUrl(photo?.url),
       cropX: photo?.cropX, cropY: photo?.cropY, zoom: photo?.zoom,
     }

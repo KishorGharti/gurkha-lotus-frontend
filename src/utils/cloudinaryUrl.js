@@ -1,5 +1,9 @@
 const UPLOAD_MARKER = '/image/upload/'
 
+export function zoomedWidth(baseWidth, zoom = 1) {
+  return Math.ceil((baseWidth * (zoom || 1)) / 100) * 100
+}
+
 export function optimizedImageUrl(url, { width } = {}) {
   if (!url || !url.includes(UPLOAD_MARKER)) return url
   const transform = ['f_auto', 'q_auto', 'dpr_auto', width ? `w_${width}` : null].filter(Boolean).join(',')

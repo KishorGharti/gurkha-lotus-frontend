@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { usePhotos } from '../../context/PhotosContext'
-import { optimizedImageUrl, placeholderImageUrl } from '../../utils/cloudinaryUrl'
+import { optimizedImageUrl, placeholderImageUrl, zoomedWidth } from '../../utils/cloudinaryUrl'
 import styles from './About.module.css'
 
 const STATS = [
@@ -43,7 +43,7 @@ export default function About() {
             >
               {aboutPhoto ? (
                 <img
-                  src={optimizedImageUrl(aboutPhoto.url, { width: 900 })} alt="Gurkha Lotus Boot Camp training ground"
+                  src={optimizedImageUrl(aboutPhoto.url, { width: zoomedWidth(900, aboutPhoto.zoom) })} alt="Gurkha Lotus Boot Camp training ground"
                   className={`${styles.aboutImg} ${imgLoaded ? styles.aboutImgLoaded : ''}`}
                   onLoad={() => setImgLoaded(true)}
                   style={{
