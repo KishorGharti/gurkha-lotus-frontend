@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import facebookIcon from '../../assets/facebook.svg'
 import styles from './Team.module.css'
 
 const DEFAULT_TEAM = [
@@ -32,7 +33,14 @@ export default function Team() {
             <article key={member.id} className={styles.card}>
               <div className={styles.avatarWrap}>
                 {member.photoUrl ? (
-                  <img src={member.photoUrl} alt={member.name} className={styles.avatarImg} />
+                  <img
+                    src={member.photoUrl} alt={member.name} className={styles.avatarImg}
+                    style={{
+                      objectPosition: `${member.cropX ?? 50}% ${member.cropY ?? 50}%`,
+                      transform: `scale(${member.zoom ?? 1})`,
+                      transformOrigin: `${member.cropX ?? 50}% ${member.cropY ?? 50}%`,
+                    }}
+                  />
                 ) : (
                   <span className={styles.initials}>{member.initials}</span>
                 )}
@@ -48,7 +56,7 @@ export default function Team() {
                   )}
                   {member.facebook && (
                     <a href={member.facebook} className={styles.contactLink} target="_blank" rel="noopener noreferrer">
-                      <span aria-hidden="true">📘</span> Facebook
+                      <img src={facebookIcon} alt="" className={styles.facebookIcon} /> Facebook
                     </a>
                   )}
                 </div>

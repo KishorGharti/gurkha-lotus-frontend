@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { usePhotos } from '../../context/PhotosContext'
 import styles from './Dashboard.module.css'
 
 const QUICK_ACTIONS = [
@@ -9,21 +10,22 @@ const QUICK_ACTIONS = [
 ]
 
 export default function Dashboard() {
-  const [stats, setStats] = useState({ services: '…', team: '…', photos: '…' })
+  const { photos, loaded: photosLoaded } = usePhotos()
+  const [stats, setStats] = useState({ services: '…', team: '…' })
 
   useEffect(() => {
     Promise.all([
       fetch('/api/services').then(r => r.json()),
       fetch('/api/team').then(r => r.json()),
-      fetch('/api/photos').then(r => r.json()),
-    ]).then(([svc, tm, ph]) => {
+    ]).then(([svc, tm]) => {
       setStats({
         services: svc.success ? svc.data.length : '?',
         team:     tm.success  ? tm.data.length  : '?',
-        photos:   ph.success  ? Object.keys(ph.data).length : '?',
       })
-    }).catch(() => setStats({ services: '?', team: '?', photos: '?' }))
+    }).catch(() => setStats({ services: '?', team: '?' }))
   }, [])
+
+  const photosCount = photosLoaded ? Object.keys(photos).length : '…'
 
   const hour = new Date().getHours()
   const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening'
@@ -31,7 +33,7 @@ export default function Dashboard() {
   const STAT_CARDS = [
     { value: stats.services, label: 'Services Listed', color: '#c9a044' },
     { value: stats.team,     label: 'Team Members',    color: '#4caf6e' },
-    { value: stats.photos,   label: 'Photos Uploaded', color: '#5b8dd9' },
+    { value: photosCount,    label: 'Photos Uploaded', color: '#5b8dd9' },
     { value: '✓',            label: 'System Active',   color: '#9c6cd4' },
   ]
 
@@ -41,7 +43,7 @@ export default function Dashboard() {
         <div>
           <h2 className={styles.greetingTitle}>{greeting}, Administrator</h2>
           <p className={styles.greetingText}>
-            Welcome to the Gurkha Lotus admin panel. Manage your website content below.
+            Welcome to the Gurkha Lotus Boot Camp admin panel. Manage your website content below.
           </p>
         </div>
         <a href="/" target="_blank" rel="noopener noreferrer" className={styles.viewSiteBtn}>

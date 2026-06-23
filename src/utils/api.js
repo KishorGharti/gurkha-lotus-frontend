@@ -8,7 +8,13 @@ async function request(path, { method = 'GET', body } = {}) {
     headers: isFormData || !body ? {} : { 'Content-Type': 'application/json' },
     body: isFormData ? body : body ? JSON.stringify(body) : undefined,
   })
-  const data = await res.json()
+  const text = await res.text()
+  let data
+  try {
+    data = text ? JSON.parse(text) : {}
+  } catch {
+    throw Object.assign(new Error(`Server returned an unexpected response (status ${res.status}).`), { status: res.status })
+  }
   if (!res.ok) throw Object.assign(new Error(data.message || 'Request failed'), { status: res.status })
   return data
 }

@@ -1,29 +1,31 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useRef } from 'react'
 import { api } from '../../utils/api'
+import { usePhotos } from '../../context/PhotosContext'
+import DragZoomPositioner from './DragZoomPositioner'
 import styles from './ManagePhotos.module.css'
 
+const HERO_CAPTION = 'This image is cropped to a 16:9 box in the homepage hero slideshow.'
+
 const PHOTO_SLOTS = [
-  { id: 'hero-1', label: 'Hero Slide 1', desc: 'First slide — Elite Military Training',    section: 'Hero Slideshow' },
-  { id: 'hero-2', label: 'Hero Slide 2', desc: 'Second slide — Gurkha Legacy',            section: 'Hero Slideshow' },
-  { id: 'hero-3', label: 'Hero Slide 3', desc: 'Third slide — World-Class Facilities',    section: 'Hero Slideshow' },
-  { id: 'hero-4', label: 'Hero Slide 4', desc: 'Fourth slide — Training Hostel',           section: 'Hero Slideshow' },
-  { id: 'about',  label: 'About Page Photo', desc: 'Displayed in the About Us section',   section: 'About Page' },
+  { id: 'logo',   label: 'Site Logo', desc: 'Shown in the navbar, footer, and admin panel', section: 'Branding' },
+  { id: 'hero-1', label: 'Hero Slide 1', desc: 'First slide — Elite Military Training',    section: 'Hero Slideshow', aspect: '16 / 9', caption: HERO_CAPTION },
+  { id: 'hero-2', label: 'Hero Slide 2', desc: 'Second slide — Gurkha Legacy',            section: 'Hero Slideshow', aspect: '16 / 9', caption: HERO_CAPTION },
+  { id: 'hero-3', label: 'Hero Slide 3', desc: 'Third slide — World-Class Facilities',    section: 'Hero Slideshow', aspect: '16 / 9', caption: HERO_CAPTION },
+  { id: 'hero-4', label: 'Hero Slide 4', desc: 'Fourth slide — Training Hostel',           section: 'Hero Slideshow', aspect: '16 / 9', caption: HERO_CAPTION },
+  { id: 'about',  label: 'About Page Photo', desc: 'Displayed in the About Us section',   section: 'About Page', aspect: '1 / 1', caption: 'This image is cropped to a 1:1 box in the About Us section.' },
 ]
 
 export default function ManagePhotos() {
-  const [photos, setPhotos]       = useState({})
+  const { photos, updatePhoto, removePhoto } = usePhotos()
   const [uploading, setUploading] = useState(null)
   const [removing, setRemoving]   = useState(null)
+  const [savingPos, setSavingPos] = useState(null)
+  const [pendingPos, setPendingPos] = useState({})
+  const [resetTokens, setResetTokens] = useState({})
   const [toast, setToast]         = useState('')
   const fileRefs = useRef({})
 
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(''), 3000) }
-
-  useEffect(() => {
-    api.get('/photos')
-      .then(d => setPhotos(d.data))
-      .catch(() => showToast('Failed to load photos.'))
-  }, [])
 
   const handleFileChange = async (e, slotId) => {
     const file = e.target.files[0]
@@ -37,7 +39,8 @@ export default function ManagePhotos() {
     setUploading(slotId)
     try {
       const d = await api.post(`/photos/${slotId}`, fd)
-      setPhotos(prev => ({ ...prev, [slotId]: { url: d.data.url, name: d.data.name } }))
+      updatePhoto(slotId, d.data)
+      setPendingPos(prev => { const next = { ...prev }; delete next[slotId]; return next })
       showToast(`Photo updated: ${d.data.name}`)
     } catch (err) {
       showToast(err.message || 'Upload failed.')
@@ -47,11 +50,37 @@ export default function ManagePhotos() {
     e.target.value = ''
   }
 
+  const handleSavePosition = async (slotId) => {
+    const pos = pendingPos[slotId]
+    if (!pos || savingPos === slotId) return
+    setSavingPos(slotId)
+    try {
+      const fd = new FormData()
+      fd.append('cropX', pos.cropX)
+      fd.append('cropY', pos.cropY)
+      fd.append('zoom', pos.zoom)
+      const d = await api.post(`/photos/${slotId}`, fd)
+      updatePhoto(slotId, d.data)
+      setPendingPos(prev => { const next = { ...prev }; delete next[slotId]; return next })
+      showToast('Position saved.')
+    } catch (err) {
+      showToast(err.message || 'Failed to save position.')
+    } finally {
+      setSavingPos(null)
+    }
+  }
+
+  const handleCancelPosition = (slotId) => {
+    setPendingPos(prev => { const next = { ...prev }; delete next[slotId]; return next })
+    setResetTokens(prev => ({ ...prev, [slotId]: (prev[slotId] || 0) + 1 }))
+  }
+
   const handleRemove = async (slotId) => {
     setRemoving(slotId)
     try {
       await api.del(`/photos/${slotId}`)
-      setPhotos(prev => { const next = { ...prev }; delete next[slotId]; return next })
+      removePhoto(slotId)
+      setPendingPos(prev => { const next = { ...prev }; delete next[slotId]; return next })
       showToast('Photo removed.')
     } catch (err) {
       showToast(err.message || 'Failed to remove.')
@@ -73,18 +102,37 @@ export default function ManagePhotos() {
             {PHOTO_SLOTS.filter(s => s.section === section).map(slot => {
               const photo = photos[slot.id]
               const busy = uploading === slot.id || removing === slot.id
+              const draft = pendingPos[slot.id]
               return (
                 <div key={slot.id} className={styles.card}>
-                  <div className={styles.preview}>
+                  <div className={`${styles.preview} ${photo?.url && slot.aspect ? styles.previewPositioner : ''}`}>
                     {photo?.url ? (
-                      <img src={photo.url} alt={slot.label} className={styles.previewImg} />
+                      slot.aspect ? (
+                        <DragZoomPositioner
+                          key={`${photo.url}-${resetTokens[slot.id] || 0}`}
+                          imageUrl={photo.url}
+                          aspect={slot.aspect}
+                          value={{ cropX: photo.cropX ?? 50, cropY: photo.cropY ?? 50, zoom: photo.zoom ?? 1 }}
+                          onChange={(pos) => setPendingPos(prev => ({ ...prev, [slot.id]: pos }))}
+                          caption={slot.caption}
+                        />
+                      ) : (
+                        <img
+                          src={photo.url} alt={slot.label} className={styles.previewImg}
+                          style={{
+                            objectPosition: `${photo.cropX ?? 50}% ${photo.cropY ?? 50}%`,
+                            transform: `scale(${photo.zoom ?? 1})`,
+                            transformOrigin: `${photo.cropX ?? 50}% ${photo.cropY ?? 50}%`,
+                          }}
+                        />
+                      )
                     ) : (
                       <div className={styles.placeholder}>
                         <span className={styles.placeholderIcon} aria-hidden="true">🖼</span>
                         <span className={styles.placeholderText}>No image uploaded</span>
                       </div>
                     )}
-                    {photo && (
+                    {photo && !slot.aspect && (
                       <div className={styles.previewOverlay}>
                         <span className={styles.fileName}>{photo.name}</span>
                       </div>
@@ -95,6 +143,19 @@ export default function ManagePhotos() {
                       </div>
                     )}
                   </div>
+
+                  {draft && (
+                    <div className={styles.positionActions}>
+                      <button type="button" className={styles.savePositionBtn} disabled={savingPos === slot.id}
+                        onClick={() => handleSavePosition(slot.id)}>
+                        {savingPos === slot.id ? 'Saving…' : 'Save Position'}
+                      </button>
+                      <button type="button" className={styles.cancelPositionBtn} disabled={savingPos === slot.id}
+                        onClick={() => handleCancelPosition(slot.id)}>
+                        Cancel
+                      </button>
+                    </div>
+                  )}
 
                   <div className={styles.cardInfo}>
                     <div>

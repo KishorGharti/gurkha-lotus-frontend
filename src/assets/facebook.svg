@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36" fill="none" aria-hidden="true">
+  <defs>
+    <linearGradient id="fb-grad" x1="18" y1="0" x2="18" y2="36" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0AA8F4"/>
+      <stop offset="1" stop-color="#0865E2"/>
+    </linearGradient>
+  </defs>
+  <circle cx="18" cy="18" r="18" fill="url(#fb-grad)"/>
+  <path d="M23.5 11.5h-2.7c-2.07 0-3.75 1.68-3.75 3.75v2.4h-2.55v3h2.55V27h3v-6.35h2.55l.45-3h-3V15.6c0-.5.4-.9.9-.9h2.55v-3.2z" fill="#fff"/>
+</svg>

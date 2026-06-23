@@ -5,13 +5,10 @@ import { api } from '../../utils/api'
 import styles from './ManageServices.module.css'
 
 const EMPTY_FORM = { title: '', description: '', features: [''] }
-const TITLE_WORD_LIMIT = 10
-const DESCRIPTION_WORD_LIMIT = 300
-
-const countWords = (text) => {
-  const trimmed = text.trim()
-  return trimmed ? trimmed.split(/\s+/).length : 0
-}
+const TITLE_CHAR_LIMIT = 80
+const DESCRIPTION_CHAR_LIMIT = 500
+const SERVICE_LIMIT = 20
+const FEATURE_LIMIT = 10
 
 export default function ManageServices() {
   const [services, setServices]     = useState([])
@@ -33,7 +30,10 @@ export default function ManageServices() {
       .finally(() => setLoading(false))
   }, [])
 
-  const openAdd = () => { setEditId(null); setForm(EMPTY_FORM); setErrors({}); setModalOpen(true) }
+  const openAdd = () => {
+    if (services.length >= SERVICE_LIMIT) { showToast(`You can add up to ${SERVICE_LIMIT} services.`); return }
+    setEditId(null); setForm(EMPTY_FORM); setErrors({}); setModalOpen(true)
+  }
   const openEdit = (svc) => {
     setEditId(svc.id)
     setForm({ title: svc.title, description: svc.description, features: [...svc.features] })
@@ -44,18 +44,12 @@ export default function ManageServices() {
 
   const handleFormChange = (e) => {
     const { name, value } = e.target
-    if (name === 'title' || name === 'description') {
-      const limit = name === 'title' ? TITLE_WORD_LIMIT : DESCRIPTION_WORD_LIMIT
-      const newCount = countWords(value)
-      const oldCount = countWords(form[name])
-      if (newCount > limit && newCount > oldCount) return
-    }
     setForm(p => ({ ...p, [name]: value }))
     setErrors(p => (p[name] ? { ...p, [name]: '' } : p))
   }
   const handleFeatureChange = (i, val) =>
     setForm(p => { const f = [...p.features]; f[i] = val; return { ...p, features: f } })
-  const addFeature = () => { if (form.features.length < 8) setForm(p => ({ ...p, features: [...p.features, ''] })) }
+  const addFeature = () => { if (form.features.length < FEATURE_LIMIT) setForm(p => ({ ...p, features: [...p.features, ''] })) }
   const removeFeature = (i) => {
     if (form.features.length > 1) setForm(p => ({ ...p, features: p.features.filter((_, idx) => idx !== i) }))
   }
@@ -68,9 +62,9 @@ export default function ManageServices() {
 
     const nextErrors = {}
     if (!title) nextErrors.title = 'This field is mandatory.'
-    else if (countWords(title) > TITLE_WORD_LIMIT) nextErrors.title = `Title must be ${TITLE_WORD_LIMIT} words or fewer.`
+    else if (title.length > TITLE_CHAR_LIMIT) nextErrors.title = `Title must be ${TITLE_CHAR_LIMIT} characters or fewer.`
     if (!description) nextErrors.description = 'This field is mandatory.'
-    else if (countWords(description) > DESCRIPTION_WORD_LIMIT) nextErrors.description = `Description must be ${DESCRIPTION_WORD_LIMIT} words or fewer.`
+    else if (description.length > DESCRIPTION_CHAR_LIMIT) nextErrors.description = `Description must be ${DESCRIPTION_CHAR_LIMIT} characters or fewer.`
 
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length) return
@@ -115,7 +109,9 @@ export default function ManageServices() {
           <h2 className={styles.pageTitle}>Services ({services.length})</h2>
           <p className={styles.pageDesc}>Add, edit, or remove service cards shown on the website.</p>
         </div>
-        <button className={styles.addBtn} onClick={openAdd}>+ Add Service</button>
+        <button className={styles.addBtn} onClick={openAdd} disabled={services.length >= SERVICE_LIMIT}>
+          + Add Service
+        </button>
       </div>
 
       {loading ? (
@@ -168,17 +164,17 @@ export default function ManageServices() {
               aria-invalid={!!errors.title} aria-describedby={errors.title ? 'svc-title-err' : 'svc-title-hint'} />
             {errors.title
               ? <span id="svc-title-err" className={styles.fieldError} role="alert">{errors.title}</span>
-              : <span id="svc-title-hint" className={styles.formHint}>{countWords(form.title)}/{TITLE_WORD_LIMIT} words</span>}
+              : <span id="svc-title-hint" className={styles.formHint}>{form.title.length}/{TITLE_CHAR_LIMIT} characters</span>}
           </div>
           <div className={styles.formGroup}>
             <label className={styles.formLabel} htmlFor="svc-desc">Description <span className={styles.req}>*</span></label>
             <textarea id="svc-desc" name="description" value={form.description} onChange={handleFormChange}
               className={`${styles.formTextarea} ${errors.description ? styles.formInputErr : ''}`}
-              placeholder="Describe this service…" rows={3}
+              placeholder="Describe this service…" rows={3} maxLength={DESCRIPTION_CHAR_LIMIT}
               aria-invalid={!!errors.description} aria-describedby={errors.description ? 'svc-desc-err' : 'svc-desc-hint'} />
             {errors.description
               ? <span id="svc-desc-err" className={styles.fieldError} role="alert">{errors.description}</span>
-              : <span id="svc-desc-hint" className={styles.formHint}>{countWords(form.description)}/{DESCRIPTION_WORD_LIMIT} words</span>}
+              : <span id="svc-desc-hint" className={styles.formHint}>{form.description.length}/{DESCRIPTION_CHAR_LIMIT} characters</span>}
           </div>
           <div className={styles.formGroup}>
             <label className={styles.formLabel}>Features</label>
@@ -191,7 +187,7 @@ export default function ManageServices() {
                     aria-label="Remove feature" disabled={form.features.length <= 1}>✕</button>
                 </div>
               ))}
-              {form.features.length < 8 && (
+              {form.features.length < FEATURE_LIMIT && (
                 <button type="button" className={styles.addFeatureBtn} onClick={addFeature}>+ Add Feature</button>
               )}
             </div>

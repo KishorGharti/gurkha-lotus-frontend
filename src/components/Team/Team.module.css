@@ -144,6 +144,12 @@
   transition: color 0.2s ease;
 }
 
+.facebookIcon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
 .contactLink:hover {
   color: var(--color-accent);
 }

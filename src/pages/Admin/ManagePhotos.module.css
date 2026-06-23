@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: 36px;
-  max-width: 1000px;
   position: relative;
 }
 
@@ -64,7 +63,7 @@
 /* ── Cards grid ── */
 .grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
   gap: 16px;
 }
 
@@ -94,6 +93,70 @@
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.previewPositioner {
+  aspect-ratio: auto;
+  overflow: visible;
+  display: flex;
+  justify-content: center;
+  padding: 18px 16px;
+}
+
+/* Save/Cancel for pending position changes */
+.positionActions {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+
+.savePositionBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--color-on-accent);
+  background: var(--color-accent);
+  border: none;
+  border-radius: 4px;
+  padding: 7px 16px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+}
+
+.savePositionBtn:hover {
+  background: var(--color-accent-light);
+}
+
+.savePositionBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.cancelPositionBtn {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.76rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px solid rgba(201, 160, 68, 0.25);
+  border-radius: 4px;
+  padding: 7px 16px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: background 0.2s ease;
+}
+
+.cancelPositionBtn:hover {
+  background: rgba(201, 160, 68, 0.08);
+}
+
+.cancelPositionBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .placeholder {

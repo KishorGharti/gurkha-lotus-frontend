@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
+import { usePhotos } from '../../context/PhotosContext'
+import { optimizedImageUrl } from '../../utils/cloudinaryUrl'
 import styles from './About.module.css'
 
 const STATS = [
   { value: '15+',  label: 'Years of Excellence' },
-  { value: '2000+', label: 'Trained Students' },
+  { value: '4000+', label: 'Trained Students' },
   { value: '95%',  label: 'Selection Rate' },
-  { value: '50+',  label: 'Expert Instructors' },
+  { value: '10+',  label: 'Expert Instructors' },
 ]
 
 const HIGHLIGHTS = [
@@ -17,14 +18,8 @@ const HIGHLIGHTS = [
 ]
 
 export default function About() {
-  const [aboutPhoto, setAboutPhoto] = useState(null)
-
-  useEffect(() => {
-    fetch('/api/photos')
-      .then(r => r.json())
-      .then(d => { if (d.success && d.data.about) setAboutPhoto(d.data.about.url) })
-      .catch(() => {})
-  }, [])
+  const { photos } = usePhotos()
+  const aboutPhoto = photos.about
 
   const scrollTo = (e, href) => {
     e.preventDefault()
@@ -38,7 +33,14 @@ export default function About() {
           <div className={styles.imageCol}>
             <div className={styles.imgWrap}>
               {aboutPhoto ? (
-                <img src={aboutPhoto} alt="Gurkha Lotus training ground" />
+                <img
+                  src={optimizedImageUrl(aboutPhoto.url, { width: 900 })} alt="Gurkha Lotus Boot Camp training ground"
+                  style={{
+                    objectPosition: `${aboutPhoto.cropX ?? 50}% ${aboutPhoto.cropY ?? 50}%`,
+                    transform: `scale(${aboutPhoto.zoom ?? 1})`,
+                    transformOrigin: `${aboutPhoto.cropX ?? 50}% ${aboutPhoto.cropY ?? 50}%`,
+                  }}
+                />
               ) : (
                 <div className={styles.imgPlaceholder}>
                   <span>Add your image here</span>
@@ -50,7 +52,7 @@ export default function About() {
           </div>
 
           <div className={styles.textCol}>
-            <span className={styles.overline}>About Gurkha Lotus</span>
+            <span className={styles.overline}>About Gurkha Lotus Boot Camp</span>
             <h2 className={styles.title}>
               A Legacy of<br />
               <span className={styles.accent}>Gurkha Excellence</span>

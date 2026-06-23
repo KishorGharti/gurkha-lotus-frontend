@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AdminAuthProvider, useAdminAuth } from './context/AdminAuthContext'
 import { ThemeProvider } from './context/ThemeContext'
+import { PhotosProvider } from './context/PhotosContext'
 
 // Public site
 import Navbar from './components/Navbar/Navbar'
@@ -74,9 +75,11 @@ export default function App() {
   return (
     <BrowserRouter>
       <ThemeProvider>
-        <AdminAuthProvider>
-          <AppRoutes />
-        </AdminAuthProvider>
+        <PhotosProvider>
+          <AdminAuthProvider>
+            <AppRoutes />
+          </AdminAuthProvider>
+        </PhotosProvider>
       </ThemeProvider>
     </BrowserRouter>
   )

@@ -34,6 +34,7 @@
   width: 56px;
   height: 56px;
   margin: 0 auto 14px;
+  object-fit: contain;
 }
 
 .brand {

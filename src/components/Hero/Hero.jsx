@@ -1,4 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
+import { usePhotos } from '../../context/PhotosContext'
+import { optimizedImageUrl } from '../../utils/cloudinaryUrl'
 import styles from './Hero.module.css'
 
 const SLIDES = [
@@ -45,19 +47,21 @@ const SLIDES = [
 ]
 
 export default function Hero() {
-  const [slides, setSlides]           = useState(SLIDES.map(s => ({ ...s, image: null })))
+  const { photos } = usePhotos()
   const [current, setCurrent]         = useState(0)
   const [transitioning, setTransitioning] = useState(false)
+  const [otherSlidesUnlocked, setOtherSlidesUnlocked] = useState(false)
+  const [loadedIds, setLoadedIds] = useState({})
 
+  const slides = SLIDES.map(s => {
+    const photo = photos[s.slotId]
+    return { ...s, image: optimizedImageUrl(photo?.url, { width: 1920 }), cropX: photo?.cropX, cropY: photo?.cropY, zoom: photo?.zoom }
+  })
+
+  // Let the visible slide's image claim full bandwidth before the rest start downloading.
   useEffect(() => {
-    fetch('/api/photos')
-      .then(r => r.json())
-      .then(d => {
-        if (d.success) {
-          setSlides(SLIDES.map(s => ({ ...s, image: d.data[s.slotId]?.url || null })))
-        }
-      })
-      .catch(() => {})
+    const t = setTimeout(() => setOtherSlidesUnlocked(true), 800)
+    return () => clearTimeout(t)
   }, [])
 
   const goTo = useCallback((index) => {
@@ -81,14 +85,23 @@ export default function Hero() {
         <div
           key={s.id}
           className={`${styles.slide} ${i === current ? styles.slideActive : ''}`}
-          style={{
-            backgroundColor: s.fallbackBg,
-            backgroundImage: s.image ? `${s.gradient}, url(${s.image})` : s.gradient,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
+          style={{ backgroundColor: s.fallbackBg }}
           aria-hidden={i !== current}
-        />
+        >
+          {s.image && (i === current || otherSlidesUnlocked) && (
+            <img
+              src={s.image} alt="" loading={i === current ? 'eager' : 'lazy'}
+              className={`${styles.slideImg} ${loadedIds[s.id] ? styles.slideImgLoaded : ''}`}
+              onLoad={() => setLoadedIds(prev => ({ ...prev, [s.id]: true }))}
+              style={{
+                objectPosition: `${s.cropX ?? 50}% ${s.cropY ?? 50}%`,
+                transform: `scale(${s.zoom ?? 1})`,
+                transformOrigin: `${s.cropX ?? 50}% ${s.cropY ?? 50}%`,
+              }}
+            />
+          )}
+          <div className={styles.slideGradient} style={{ backgroundImage: s.gradient }} />
+        </div>
       ))}
 
       <div className={styles.pattern} aria-hidden="true" />
@@ -103,9 +116,6 @@ export default function Hero() {
           <a href={slide.cta2.href} className={styles.btnSecondary} onClick={e => scrollTo(e, slide.cta2.href)}>{slide.cta2.text}</a>
         </div>
       </div>
-
-      <button className={`${styles.arrow} ${styles.arrowLeft}`}  onClick={prev} aria-label="Previous slide">&#8249;</button>
-      <button className={`${styles.arrow} ${styles.arrowRight}`} onClick={next} aria-label="Next slide">&#8250;</button>
 
       <div className={styles.dots} role="tablist" aria-label="Slide navigation">
         {slides.map((_, i) => (

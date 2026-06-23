@@ -1,13 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
 import Modal from '../../components/Modal/Modal'
 import ConfirmDialog from '../../components/ConfirmDialog/ConfirmDialog'
+import DragZoomPositioner from './DragZoomPositioner'
 import { api } from '../../utils/api'
+import facebookIcon from '../../assets/facebook.svg'
 import styles from './ManageTeam.module.css'
 
 const getInitials = (name) =>
   name.split(' ').filter(w => /^[A-Za-z]/.test(w)).slice(0, 3).map(w => w[0].toUpperCase()).join('')
 
 const EMPTY_FORM = { name: '', role: '', phone: '', facebook: '' }
+const TEAM_LIMIT = 20
+const DEFAULT_PHOTO_POS = { cropX: 50, cropY: 50, zoom: 1 }
 
 // Expected national-number length per country calling code, for basic format validation.
 const PHONE_RULES = [
@@ -63,6 +67,7 @@ export default function ManageTeam() {
   const [form, setForm]             = useState(EMPTY_FORM)
   const [photoFile, setPhotoFile]   = useState(null)
   const [photoPreview, setPhotoPreview] = useState(null)
+  const [photoPos, setPhotoPos]     = useState(DEFAULT_PHOTO_POS)
   const [photoRemoved, setPhotoRemoved] = useState(false)
   const [deleteTarget, setDeleteTarget] = useState(null)
   const [saving, setSaving]         = useState(false)
@@ -79,17 +84,27 @@ export default function ManageTeam() {
       .finally(() => setLoading(false))
   }, [])
 
-  const openAdd = () => { setEditId(null); setForm(EMPTY_FORM); setPhotoFile(null); setPhotoPreview(null); setPhotoRemoved(false); setErrors({}); setModalOpen(true) }
+  const openAdd = () => {
+    if (team.length >= TEAM_LIMIT) { showToast(`You can add up to ${TEAM_LIMIT} team members.`); return }
+    setEditId(null); setForm(EMPTY_FORM)
+    setPhotoFile(null); setPhotoPreview(null); setPhotoPos(DEFAULT_PHOTO_POS); setPhotoRemoved(false)
+    setErrors({}); setModalOpen(true)
+  }
   const openEdit = (m) => {
     setEditId(m.id)
     setForm({ name: m.name, role: m.role, phone: m.phone || '', facebook: m.facebook || '' })
     setPhotoFile(null)
     setPhotoPreview(m.photoUrl || null)
+    setPhotoPos({ cropX: m.cropX ?? 50, cropY: m.cropY ?? 50, zoom: m.zoom ?? 1 })
     setPhotoRemoved(false)
     setErrors({})
     setModalOpen(true)
   }
-  const closeModal = () => { setModalOpen(false); setForm(EMPTY_FORM); setEditId(null); setPhotoFile(null); setPhotoPreview(null); setPhotoRemoved(false); setErrors({}) }
+  const closeModal = () => {
+    setModalOpen(false); setForm(EMPTY_FORM); setEditId(null)
+    setPhotoFile(null); setPhotoPreview(null); setPhotoPos(DEFAULT_PHOTO_POS); setPhotoRemoved(false)
+    setErrors({})
+  }
 
   const handleFormChange = (e) => {
     const { name, value } = e.target
@@ -105,11 +120,14 @@ export default function ManageTeam() {
     if (file.size > 10 * 1024 * 1024) { showToast('Photo must be under 10 MB.'); return }
     setPhotoFile(file)
     setPhotoPreview(URL.createObjectURL(file))
+    setPhotoPos(DEFAULT_PHOTO_POS)
     setPhotoRemoved(false)
     e.target.value = ''
   }
 
-  const handleRemovePhoto = () => { setPhotoFile(null); setPhotoPreview(null); setPhotoRemoved(true) }
+  const handleRemovePhoto = () => {
+    setPhotoFile(null); setPhotoPreview(null); setPhotoPos(DEFAULT_PHOTO_POS); setPhotoRemoved(true)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -139,6 +157,9 @@ export default function ManageTeam() {
     fd.append('role', role)
     fd.append('phone', phone)
     fd.append('facebook', form.facebook.trim())
+    fd.append('cropX', photoPos.cropX)
+    fd.append('cropY', photoPos.cropY)
+    fd.append('zoom', photoPos.zoom)
     if (photoFile) fd.append('photo', photoFile)
     if (photoRemoved && !photoFile) fd.append('removePhoto', 'true')
 
@@ -182,7 +203,9 @@ export default function ManageTeam() {
           <h2 className={styles.pageTitle}>Our Team ({team.length})</h2>
           <p className={styles.pageDesc}>Manage team member profiles displayed on the website.</p>
         </div>
-        <button className={styles.addBtn} onClick={openAdd}>+ Add Member</button>
+        <button className={styles.addBtn} onClick={openAdd} disabled={team.length >= TEAM_LIMIT}>
+          + Add Member
+        </button>
       </div>
 
       {loading ? (
@@ -193,14 +216,25 @@ export default function ManageTeam() {
             <div key={member.id} className={styles.card}>
               <div className={styles.avatarWrap}>
                 {member.photoUrl
-                  ? <img src={member.photoUrl} alt={member.name} className={styles.avatarImg} />
+                  ? <img
+                      src={member.photoUrl} alt={member.name} className={styles.avatarImg}
+                      style={{
+                        objectPosition: `${member.cropX ?? 50}% ${member.cropY ?? 50}%`,
+                        transform: `scale(${member.zoom ?? 1})`,
+                        transformOrigin: `${member.cropX ?? 50}% ${member.cropY ?? 50}%`,
+                      }}
+                    />
                   : <span className={styles.initials}>{member.initials}</span>}
               </div>
               <div className={styles.info}>
                 <div className={styles.memberName}>{member.name}</div>
                 <div className={styles.memberRole}>{member.role}</div>
                 {member.phone && <div className={styles.memberMeta}>📞 {member.phone}</div>}
-                {member.facebook && <div className={styles.memberMeta}>📘 Facebook linked</div>}
+                {member.facebook && (
+                  <div className={styles.memberMeta}>
+                    <img src={facebookIcon} alt="" className={styles.facebookIcon} /> Facebook linked
+                  </div>
+                )}
               </div>
               <div className={styles.cardActions}>
                 <button className={styles.editBtn} onClick={() => openEdit(member)}>Edit</button>
@@ -220,24 +254,38 @@ export default function ManageTeam() {
       <Modal isOpen={modalOpen} onClose={closeModal} title={editId ? 'Edit Team Member' : 'Add Team Member'} size="md">
         <form onSubmit={handleSubmit} className={styles.form} noValidate>
           {/* Photo */}
-          <div className={styles.photoSection}>
-            <div className={styles.photoPreview}>
-              {photoPreview
-                ? <img src={photoPreview} alt="Preview" className={styles.photoPreviewImg} />
-                : <span className={styles.photoInitials}>{getInitials(form.name) || '?'}</span>}
-            </div>
-            <div className={styles.photoActions}>
+          {photoPreview ? (
+            <div className={styles.imageSection}>
+              <DragZoomPositioner
+                key={photoPreview}
+                imageUrl={photoPreview}
+                aspect="1 / 1"
+                value={photoPos}
+                onChange={setPhotoPos}
+                caption="This image is cropped to a 1:1 box on the team grid."
+              />
               <input ref={fileRef} type="file" accept="image/jpeg,image/jpg,image/png,image/webp"
-                className={styles.hiddenInput} onChange={handlePhotoChange} aria-label="Upload member photo" />
-              <button type="button" className={styles.uploadPhotoBtn} onClick={() => fileRef.current?.click()}>
-                {photoPreview ? 'Change Photo' : 'Upload Photo'}
+                className={styles.hiddenInput} onChange={handlePhotoChange} aria-label="Change member photo" />
+              <button type="button" className={styles.changeImageBtn} onClick={() => fileRef.current?.click()}>
+                Change Photo
               </button>
-              {photoPreview && (
-                <button type="button" className={styles.removePhotoBtn} onClick={handleRemovePhoto}>Remove</button>
-              )}
-              <p className={styles.photoHint}>JPG, PNG or WebP · Max 10 MB</p>
+              <button type="button" className={styles.removeImageBtn} onClick={handleRemovePhoto}>Remove Photo</button>
             </div>
-          </div>
+          ) : (
+            <div className={styles.photoSection}>
+              <div className={styles.photoPreview}>
+                <span className={styles.photoInitials}>{getInitials(form.name) || '?'}</span>
+              </div>
+              <div className={styles.photoActions}>
+                <input ref={fileRef} type="file" accept="image/jpeg,image/jpg,image/png,image/webp"
+                  className={styles.hiddenInput} onChange={handlePhotoChange} aria-label="Upload member photo" />
+                <button type="button" className={styles.uploadPhotoBtn} onClick={() => fileRef.current?.click()}>
+                  Upload Photo
+                </button>
+                <p className={styles.photoHint}>JPG, PNG or WebP · Max 10 MB</p>
+              </div>
+            </div>
+          )}
 
           <div className={styles.formGroup}>
             <label className={styles.formLabel} htmlFor="member-name">Full Name <span className={styles.req}>*</span></label>
