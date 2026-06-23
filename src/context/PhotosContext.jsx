@@ -6,7 +6,7 @@ const CACHE_KEY = 'gl_photos_cache'
 
 function readCache() {
   try {
-    const raw = sessionStorage.getItem(CACHE_KEY)
+    const raw = localStorage.getItem(CACHE_KEY)
     return raw ? JSON.parse(raw) : null
   } catch {
     return null
@@ -15,7 +15,7 @@ function readCache() {
 
 function writeCache(data) {
   try {
-    sessionStorage.setItem(CACHE_KEY, JSON.stringify(data))
+    localStorage.setItem(CACHE_KEY, JSON.stringify(data))
   } catch {}
 }
 
