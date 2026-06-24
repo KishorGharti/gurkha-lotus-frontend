@@ -24,7 +24,7 @@ export default function DragZoomPositioner({ imageUrl, aspect = '1 / 1', value, 
         cropX: clamp(startCropX - ((e.clientX - startX) / width) * 100 / p.zoom, 0, 100),
         cropY: clamp(startCropY - ((e.clientY - startY) / height) * 100 / p.zoom, 0, 100),
       }
-      dragRef.current.latest = next
+      if (dragRef.current) dragRef.current.latest = next
       return next
     })
   }
