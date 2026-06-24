@@ -1,7 +1,8 @@
 const UPLOAD_MARKER = '/image/upload/'
 
 export function zoomedWidth(baseWidth, zoom = 1) {
-  return Math.ceil((baseWidth * (zoom || 1)) / 100) * 100
+  const capped = Math.min(baseWidth * (zoom || 1), baseWidth * 1.6)
+  return Math.ceil(capped / 100) * 100
 }
 
 export function optimizedImageUrl(url, { width } = {}) {

@@ -52,12 +52,14 @@ export default function Hero() {
   const [transitioning, setTransitioning] = useState(false)
   const [otherSlidesUnlocked, setOtherSlidesUnlocked] = useState(false)
   const [loadedIds, setLoadedIds] = useState({})
+  const [errorIds, setErrorIds] = useState({})
 
   const slides = SLIDES.map(s => {
     const photo = photos[s.slotId]
+    const width = errorIds[s.id] ? 1920 : zoomedWidth(1920, photo?.zoom)
     return {
       ...s,
-      image: optimizedImageUrl(photo?.url, { width: zoomedWidth(1920, photo?.zoom) }),
+      image: optimizedImageUrl(photo?.url, { width }),
       placeholder: placeholderImageUrl(photo?.url),
       cropX: photo?.cropX, cropY: photo?.cropY, zoom: photo?.zoom,
     }
@@ -102,6 +104,7 @@ export default function Hero() {
               src={s.image} alt="" loading={i === current ? 'eager' : 'lazy'}
               className={`${styles.slideImg} ${loadedIds[s.id] ? styles.slideImgLoaded : ''}`}
               onLoad={() => setLoadedIds(prev => ({ ...prev, [s.id]: true }))}
+              onError={() => setErrorIds(prev => (prev[s.id] ? prev : { ...prev, [s.id]: true }))}
               style={{
                 objectPosition: `${s.cropX ?? 50}% ${s.cropY ?? 50}%`,
                 transform: `scale(${s.zoom ?? 1})`,

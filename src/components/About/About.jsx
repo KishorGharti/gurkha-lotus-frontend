@@ -22,6 +22,7 @@ export default function About() {
   const { photos } = usePhotos()
   const aboutPhoto = photos.about
   const [imgLoaded, setImgLoaded] = useState(false)
+  const [imgError, setImgError] = useState(false)
 
   const scrollTo = (e, href) => {
     e.preventDefault()
@@ -43,9 +44,10 @@ export default function About() {
             >
               {aboutPhoto ? (
                 <img
-                  src={optimizedImageUrl(aboutPhoto.url, { width: zoomedWidth(900, aboutPhoto.zoom) })} alt="Gurkha Lotus Boot Camp training ground"
+                  src={optimizedImageUrl(aboutPhoto.url, { width: imgError ? 900 : zoomedWidth(900, aboutPhoto.zoom) })} alt="Gurkha Lotus Boot Camp training ground"
                   className={`${styles.aboutImg} ${imgLoaded ? styles.aboutImgLoaded : ''}`}
                   onLoad={() => setImgLoaded(true)}
+                  onError={() => setImgError(true)}
                   style={{
                     objectPosition: `${aboutPhoto.cropX ?? 50}% ${aboutPhoto.cropY ?? 50}%`,
                     transform: `scale(${aboutPhoto.zoom ?? 1})`,
