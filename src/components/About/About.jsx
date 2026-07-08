@@ -44,7 +44,7 @@ export default function About() {
             >
               {aboutPhoto ? (
                 <img
-                  src={optimizedImageUrl(aboutPhoto.url, { width: imgError ? 900 : zoomedWidth(900, aboutPhoto.zoom) })} alt="Gurkha Lotus Boot Camp training ground"
+                  src={optimizedImageUrl(aboutPhoto.url, { width: imgError ? 1500 : zoomedWidth(1500, aboutPhoto.zoom) })} alt="Gurkha Lotus Boot Camp training ground"
                   className={`${styles.aboutImg} ${imgLoaded ? styles.aboutImgLoaded : ''}`}
                   onLoad={() => setImgLoaded(true)}
                   onError={() => setImgError(true)}
